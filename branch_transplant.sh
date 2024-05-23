@@ -48,6 +48,13 @@ fi
 # Define clone directory
 CLONE_DIR="repo-clone"
 
+# Add SSH key to the SSH agent
+SSH_KEY_PATH="$HOME/.ssh/id_ed25519"
+if [ -f "$SSH_KEY_PATH" ]; then
+  eval "$(ssh-agent -s)"
+  ssh-add $SSH_KEY_PATH
+fi
+
 # Clone the repository
 git clone $REPO_URL $CLONE_DIR
 
@@ -92,3 +99,6 @@ cd ..
 rm -rf $CLONE_DIR
 
 echo "All files have been moved from $SOURCE_BRANCH to $TARGET_BRANCH in the repository $REPO_URL"
+if [ "$DELETE_OLD_BRANCH" = true ]; then
+  echo "The old branch $SOURCE_BRANCH has been deleted."
+fi
